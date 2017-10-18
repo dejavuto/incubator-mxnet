@@ -187,7 +187,7 @@ def parse_args():
 def main():
     args = parse_args()
     logger.info('Called with argument: %s' % args)
-    ctx = [mx.gpu(int(i)) for i in args.gpus.split(',')]
+    ctx = [mx.cpu()] #[mx.gpu(int(i)) for i in args.gpus.split(',')]
     train_net(args, ctx, args.pretrained, args.pretrained_epoch, args.prefix, args.begin_epoch, args.end_epoch,
               lr=args.lr, lr_step=args.lr_step)
 
