@@ -123,14 +123,30 @@ class coco(IMDB):
         # sanitize bboxes
         valid_objs = []
         for obj in objs:
-            x, y, w, h = obj['bbox']
+
+            if False:
+                x, y, w, h = obj['bbox']
+                x1 = np.max((0, x))
+                y1 = np.max((0, y))
+                x2 = np.min((width - 1, x1 + np.max((0, w - 1))))
+                y2 = np.min((height - 1, y1 + np.max((0, h - 1))))
+                if obj['area'] > 0 and x2 >= x1 and y2 >= y1:
+                    obj['clean_bbox'] = [x1, y1, x2, y2]
+                    valid_objs.append(obj)
+
+            # mvn
+            cobj = obj['bbox'][:4]
+
+            x, y, w, h = cobj  # obj['bbox']
             x1 = np.max((0, x))
             y1 = np.max((0, y))
             x2 = np.min((width - 1, x1 + np.max((0, w - 1))))
             y2 = np.min((height - 1, y1 + np.max((0, h - 1))))
-            if obj['area'] > 0 and x2 >= x1 and y2 >= y1:
+            if (True or obj['area'] > 0) and x2 >= x1 and y2 >= y1:
                 obj['clean_bbox'] = [x1, y1, x2, y2]
                 valid_objs.append(obj)
+
+
         objs = valid_objs
         num_objs = len(objs)
 
@@ -142,10 +158,20 @@ class coco(IMDB):
             cls = self._coco_ind_to_class_ind[obj['category_id']]
             boxes[ix, :] = obj['clean_bbox']
             gt_classes[ix] = cls
-            if obj['iscrowd']:
+
+
+            if False:
+                if obj['iscrowd']:
+                    overlaps[ix, :] = -1.0
+                else:
+                    overlaps[ix, cls] = 1.0
+
+            # mvn
+            if False: #obj['iscrowd']:
                 overlaps[ix, :] = -1.0
             else:
                 overlaps[ix, cls] = 1.0
+
 
         roi_rec = {'image': self.image_path_from_index(index),
                    'height': height,
