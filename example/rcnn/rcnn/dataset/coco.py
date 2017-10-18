@@ -77,6 +77,13 @@ class coco(IMDB):
         """ example: images / train2014 / COCO_train2014_000000119993.jpg """
         filename = 'COCO_%s_%012d.jpg' % (self.data_name, index)
         image_path = os.path.join(self.data_path, 'images', self.data_name, filename)
+
+
+        #
+        # for modeai_syte:
+        if True:
+            image_path = image_path.replace("COCO_train2014_","")  # mvn
+            image_path = image_path.replace("/000","/0")
         assert os.path.exists(image_path), 'Path does not exist: {}'.format(image_path)
         return image_path
 
